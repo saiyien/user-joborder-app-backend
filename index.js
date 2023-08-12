@@ -7,7 +7,7 @@ const config = require('./config');
 const app = express();
 const port = 3000;
 
-// Connect to MongoDB
+// Connect to MongoDB 
 mongoose.connect(config.databaseUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
