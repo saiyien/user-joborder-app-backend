@@ -15,15 +15,28 @@ const listUsersWithPagination = async (req, res) => {
 // 2) Update a user and add a job order to the list of user information
 const updateUserWithJobOrder = async (req, res) => {
     const userId = req.params.id;
-    const { jobOrder } = req.body;
+    const { name, image, companyName, email, remarks, jobOrder } = req.body;
 
-    const user = await User.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
         userId,
-        { $push: { jobOrders: jobOrder } },
+        {
+            $set: {
+                name: name,
+                image: image,
+                companyName: companyName,
+                email: email,
+                remarks: remarks,
+            },
+            $push: { jobOrders: jobOrder },
+        },
         { new: true }
     );
 
-    return user;
+    if (!updatedUser) {
+        return { error: "User not found" };
+    }
+
+    return updatedUser;
 };
 
 // 3) Add a new user to the list of user information
