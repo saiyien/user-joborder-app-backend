@@ -9,8 +9,18 @@ module.exports = app => {
     app.get("/users", authMiddleware, async (req, res) => {
         try {
             const users = await userController.listUsersWithPagination(req, res);
-
             res.json(users);
+        } catch (err) {
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+    });
+
+    // get user
+    app.get("/users/:id", authMiddleware, async (req, res) => {
+        try {
+            const user = await userController.getUser(req, res);
+            res.json(user);
         } catch (err) {
             res.status(500).json({ error: 'Internal Server Error' });
         }
@@ -32,7 +42,6 @@ module.exports = app => {
     app.post("/users", async (req, res) => {
         try {
             const user = await userController.createUser(req, res);
-
             res.json(user);
         } catch (err) {
             if (err.code === 11000 && err.keyPattern.email) {
@@ -43,6 +52,7 @@ module.exports = app => {
         }
     });
 
+    // delete
     app.delete("/users/:id", authMiddleware, async (req, res) => {    
         try {          
             const result = await userController.deleteUser(req, res);
@@ -52,13 +62,13 @@ module.exports = app => {
         }        
     });
 
+    // login
     app.post('/login', async (req, res) => {
         const { email, password } = req.body;
 
         try {
             // Find the user by email
             const user = await User.findOne({ email });
-
             if (!user) {
                 return res.status(401).json({ error: 'User not found' });
             }

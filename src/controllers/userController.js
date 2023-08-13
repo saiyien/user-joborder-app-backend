@@ -58,4 +58,11 @@ const deleteUser = async (req, res) => {
         return { message: 'User deleted successfully' };    
 };
 
-module.exports = { listUsersWithPagination, updateUserWithJobOrder, createUser, deleteUser };
+// 4) Get a user from the list of user information
+const getUser = async (req, res) => {
+    const userId = req.params.id;
+    const user = await User.findOne({ "_id" : userId});
+    return user;   
+};
+
+module.exports = { listUsersWithPagination, updateUserWithJobOrder, createUser, deleteUser, getUser };
