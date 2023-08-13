@@ -14,7 +14,7 @@ This is a Node.js application for managing user information and job orders. It p
 1. Clone the repository to your local machine:
 
    ```
-   git clone https://github.com/your-username/user-joborder-app.git
+   git clone https://github.com/saiyien/user-joborder-app-backend.git
    ```
 
 2. Navigate to the project directory:
@@ -45,6 +45,7 @@ This is a Node.js application for managing user information and job orders. It p
 - `PUT /users/:id` - Update a user with a new job order
 - `POST /users` - Create a new user
 - `DELETE /users/:id` - Delete a user
+- `GET /users/:id` - Get a user 
 
 ### Authentication
 
