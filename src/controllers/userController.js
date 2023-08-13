@@ -9,7 +9,7 @@ const listUsersWithPagination = async (req, res) => {
         .skip((page - 1) * limit)
         .limit(limit);
 
-    return users;   
+    return users;
 };
 
 // 2) Update a user and add a job order to the list of user information
@@ -43,26 +43,52 @@ const updateUserWithJobOrder = async (req, res) => {
 const createUser = async (req, res) => {
     const userData = req.body;
 
-    const user = await User.create(userData);
+    // Parse the jobOrders JSON string
+    const jobOrders = JSON.parse(userData.jobOrders);
+
+    // Construct the final document
+    const document = {
+        name: userData.name,
+        image: userData.image,
+        companyName: userData.companyName,
+        email: userData.email,
+        remarks: userData.remarks,
+        jobOrders: [
+            {
+                pickup: {
+                    latitude: jobOrders.pickup.latitude,
+                    longitude: jobOrders.pickup.longitude,
+                    address: jobOrders.pickup.address
+                },
+                dropoff: {
+                    latitude: jobOrders.dropoff.latitude,
+                    longitude: jobOrders.dropoff.longitude,
+                    address: jobOrders.dropoff.address
+                }
+            }
+        ]
+    };
+
+    const user = await User.create(document);
     return user;
 };
 
 // 4) Delete a user from the list of user information
 const deleteUser = async (req, res) => {
     const userId = req.params.id;
-    
-    const user =  await User.findByIdAndDelete(userId);
-    if(user == null)
-        return { message: 'No User delete' }; 
+
+    const user = await User.findByIdAndDelete(userId);
+    if (user == null)
+        return { message: 'No User delete' };
     else
-        return { message: 'User deleted successfully' };    
+        return { message: 'User deleted successfully' };
 };
 
 // 4) Get a user from the list of user information
 const getUser = async (req, res) => {
     const userId = req.params.id;
-    const user = await User.findOne({ "_id" : userId});
-    return user;   
+    const user = await User.findOne({ "_id": userId });
+    return user;
 };
 
 module.exports = { listUsersWithPagination, updateUserWithJobOrder, createUser, deleteUser, getUser };
